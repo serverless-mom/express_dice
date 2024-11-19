@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roll the Dice!</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+        }
+        #rollBtn {
+            font-size: 2rem;
+            padding: 20px 40px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+        #rollBtn:hover {
+            background-color: #218838;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 1.5rem;
+        }
+        #numDice {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            padding: 5px;
+            width: 60px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Roll the Dice!</h1>
+
+    <!-- Number input field to enter the number of dice -->
+    <label for="numDice">Number of Dice:</label>
+    <input type="number" id="numDice" value="1" min="1" max="20">
+
+    <button id="rollBtn">Roll the Dice!</button>
+    <div id="result"></div>
+
+    <script>
+        // Function to make an AJAX request to the server
+        async function rollTheDice() {
+            const numDice = document.getElementById('numDice').value;
+
+            // Ensure the input is valid (between 1 and 10)
+            if (numDice < 1 || numDice > 20) {
+                document.getElementById('result').innerText = 'Please enter a valid number between 1 and 20.';
+                return;
+            }
+
+            try {
+                const response = await fetch(`/rollthedice?rolls=${numDice}`);
+                const diceRolls = await response.json();
+                
+                // Display the dice rolls in the result div
+                document.getElementById('result').innerText = `Dice rolls: ${diceRolls.join(', ')}`;
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        // Add event listener to the button
+        document.getElementById('rollBtn').addEventListener('click', function() {
+            rollTheDice();
+        });
+    </script>
+
+</body>
+</html>
